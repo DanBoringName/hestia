@@ -1,0 +1,33 @@
+{
+  "name": "Hestia",
+  "// services": "Reuse the infrastructure stack and add the workspace service on top.",
+  "dockerComposeFile": [
+    "../infrastructure/docker-compose.yml",
+    "docker-compose.yml"
+  ],
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/hestia",
+  "remoteUser": "node",
+  "// ports": "5173 Vite (web), 3000 Fastify (api), plus the backing services.",
+  "forwardPorts": [3000, 5173, 5432, 6379, 7700],
+  "postCreateCommand": "npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "Prisma.prisma",
+        "bradlc.vscode-tailwindcss",
+        "vitest.explorer",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        }
+      }
+    }
+  }
+}

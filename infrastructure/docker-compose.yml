@@ -7,8 +7,7 @@
 # This file is for LOCAL DEV ONLY. Production config lives elsewhere and is
 # never derived from these defaults. Copy .env.example -> .env before running:
 #   docker compose --env-file .env up -d
-#
-# All credentials here are throwaway dev values, never production secrets.
+
 
 name: hestia-dev
 

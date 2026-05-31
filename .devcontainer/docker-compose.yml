@@ -1,0 +1,33 @@
+# Dev Container overlay.
+#
+# Merged on top of ../infrastructure/docker-compose.yml (see devcontainer.json
+# `dockerComposeFile`), this adds the `workspace` service the editor attaches
+# to. Because it joins the same compose project/network, the workspace reaches
+# the backing services by name: postgres:5432, redis:6379, meilisearch:7700.
+#
+# Credentials below are throwaway DEV defaults that match infrastructure/.env.example.
+# Never reused in production — real config comes from the environment at runtime.
+
+name: hestia-dev
+
+services:
+  workspace:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    # Keep the container alive; the editor runs commands inside it.
+    command: sleep infinity
+    volumes:
+      - ..:/workspaces/hestia:cached
+    environment:
+      DATABASE_URL: postgres://hestia:hestia_dev_pw@postgres:5432/hestia
+      REDIS_URL: redis://redis:6379
+      MEILI_HOST: http://meilisearch:7700
+      MEILI_MASTER_KEY: hestia_dev_master_key
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
