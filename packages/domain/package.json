@@ -1,0 +1,20 @@
+{
+  "name": "@hestia/domain",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pure-TypeScript domain layer for Hestia. No framework or IO imports — entities, value objects, and domain errors only.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  }
+}

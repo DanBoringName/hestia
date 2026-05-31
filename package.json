@@ -20,5 +20,10 @@
     "build": "npm run build --workspaces --if-present",
     "infra:up": "docker compose --env-file infrastructure/.env -f infrastructure/docker-compose.yml up -d",
     "infra:down": "docker compose -f infrastructure/docker-compose.yml down"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.7"
   }
 }
