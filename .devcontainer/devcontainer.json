@@ -7,7 +7,7 @@
   ],
   "service": "workspace",
   "workspaceFolder": "/workspaces/hestia",
-  "remoteUser": "node",
+  "remoteUser": "danja",
   "// ports": "5173 Vite (web), 3000 Fastify (api), plus the backing services.",
   "forwardPorts": [3000, 5173, 5432, 6379, 7700],
   "postCreateCommand": "npm install",

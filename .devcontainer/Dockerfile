@@ -15,6 +15,9 @@ RUN apt-get update \
        ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
-# The official node image already ships a non-root `node` user (uid/gid 1000),
-# which devcontainer.json attaches to via remoteUser.
-USER node
+
+ARG USERNAME=danja
+RUN groupmod --new-name "${USERNAME}" node \
+  && usermod --login "${USERNAME}" --home "/home/${USERNAME}" --move-home node
+
+USER ${USERNAME}
