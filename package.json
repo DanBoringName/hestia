@@ -16,14 +16,20 @@
     "typecheck": "tsc --build",
     "typecheck:clean": "tsc --build --clean",
     "test": "npm run test --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "build": "npm run build --workspaces --if-present",
     "infra:up": "docker compose --env-file infrastructure/.env -f infrastructure/docker-compose.yml up -d",
     "infra:down": "docker compose -f infrastructure/docker-compose.yml down"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.9.1",
+    "@vitest/eslint-plugin": "^1.6.18",
+    "eslint": "^10.4.1",
+    "globals": "^17.6.0",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.60.0",
     "vitest": "^4.1.7"
   }
 }
