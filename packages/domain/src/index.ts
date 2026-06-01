@@ -48,3 +48,5 @@ export type {
   FriendshipStatus,
   RequestFriendshipProps,
 } from './identity/friendship.js';
+export { Block, BlockId, CannotBlockSelfError } from './identity/block.js';
+export type { PlaceBlockProps } from './identity/block.js';
