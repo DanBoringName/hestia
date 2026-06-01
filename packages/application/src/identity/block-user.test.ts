@@ -1,40 +1,16 @@
-import { Block, CannotBlockSelfError, InvalidIdentifierError, Timestamp, UserId } from '@hestia/domain';
+import { CannotBlockSelfError, InvalidIdentifierError, Timestamp } from '@hestia/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { Clock } from '../ports/clock.js';
-import type { IdGenerator } from '../ports/id-generator.js';
-import type { BlockRepository } from './block-repository.js';
+import { fixedClock, InMemoryBlockRepository, SequentialIdGenerator } from '../testing/index.js';
 import { BlockUser } from './block-user.js';
 
-class InMemoryBlockRepository implements BlockRepository {
-  readonly items: Block[] = [];
-
-  async save(block: Block): Promise<void> {
-    this.items.push(block);
-  }
-
-  async existsByBlockerAndBlocked(blockerId: UserId, blockedId: UserId): Promise<boolean> {
-    return this.items.some((b) => b.blockerId === blockerId && b.blockedId === blockedId);
-  }
-}
-
-class SequentialIdGenerator implements IdGenerator {
-  private count = 0;
-
-  generate(): string {
-    this.count += 1;
-    return `blk_${this.count}`;
-  }
-}
-
 const NOW = Timestamp.fromISOString('2026-06-01T09:00:00.000Z');
-const clock: Clock = { now: () => NOW };
 
 let blocks: InMemoryBlockRepository;
 let blockUser: BlockUser;
 
 beforeEach(() => {
   blocks = new InMemoryBlockRepository();
-  blockUser = new BlockUser(blocks, new SequentialIdGenerator(), clock);
+  blockUser = new BlockUser(blocks, new SequentialIdGenerator('blk'), fixedClock(NOW));
 });
 
 describe('BlockUser', () => {

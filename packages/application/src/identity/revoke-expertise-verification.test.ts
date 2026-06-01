@@ -8,32 +8,9 @@ import {
   UserId,
 } from '@hestia/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { ExpertiseClaimRepository } from './expertise-claim-repository.js';
-import {
-  RevokeExpertiseVerification,
-} from './revoke-expertise-verification.js';
+import { InMemoryExpertiseClaimRepository } from '../testing/index.js';
+import { RevokeExpertiseVerification } from './revoke-expertise-verification.js';
 import { ExpertiseClaimNotFoundError } from './verify-expertise.js';
-
-class InMemoryExpertiseClaimRepository implements ExpertiseClaimRepository {
-  readonly items: ExpertiseClaim[] = [];
-
-  async save(claim: ExpertiseClaim): Promise<void> {
-    const index = this.items.findIndex((item) => item.id === claim.id);
-    if (index >= 0) {
-      this.items[index] = claim;
-    } else {
-      this.items.push(claim);
-    }
-  }
-
-  async findById(id: ExpertiseClaimId): Promise<ExpertiseClaim | null> {
-    return this.items.find((item) => item.id === id) ?? null;
-  }
-
-  async existsByUserAndTag(userId: UserId, tag: ExpertiseTag): Promise<boolean> {
-    return this.items.some((item) => item.userId === userId && item.tag.equals(tag));
-  }
-}
 
 const CLAIMED_AT = Timestamp.fromISOString('2026-06-01T09:00:00.000Z');
 const VERIFIED_AT = Timestamp.fromISOString('2026-06-02T10:00:00.000Z');

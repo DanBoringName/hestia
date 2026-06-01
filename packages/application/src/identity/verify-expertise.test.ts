@@ -8,34 +8,11 @@ import {
   UserId,
 } from '@hestia/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { Clock } from '../ports/clock.js';
-import type { ExpertiseClaimRepository } from './expertise-claim-repository.js';
+import { fixedClock, InMemoryExpertiseClaimRepository } from '../testing/index.js';
 import { ExpertiseClaimNotFoundError, VerifyExpertise } from './verify-expertise.js';
-
-class InMemoryExpertiseClaimRepository implements ExpertiseClaimRepository {
-  readonly items: ExpertiseClaim[] = [];
-
-  async save(claim: ExpertiseClaim): Promise<void> {
-    const index = this.items.findIndex((item) => item.id === claim.id);
-    if (index >= 0) {
-      this.items[index] = claim;
-    } else {
-      this.items.push(claim);
-    }
-  }
-
-  async findById(id: ExpertiseClaimId): Promise<ExpertiseClaim | null> {
-    return this.items.find((item) => item.id === id) ?? null;
-  }
-
-  async existsByUserAndTag(userId: UserId, tag: ExpertiseTag): Promise<boolean> {
-    return this.items.some((item) => item.userId === userId && item.tag.equals(tag));
-  }
-}
 
 const CLAIMED_AT = Timestamp.fromISOString('2026-06-01T09:00:00.000Z');
 const VERIFIED_AT = Timestamp.fromISOString('2026-06-02T10:00:00.000Z');
-const clock: Clock = { now: () => VERIFIED_AT };
 
 let claims: InMemoryExpertiseClaimRepository;
 let verifyExpertise: VerifyExpertise;
@@ -53,7 +30,7 @@ function seedClaim(): void {
 
 beforeEach(() => {
   claims = new InMemoryExpertiseClaimRepository();
-  verifyExpertise = new VerifyExpertise(claims, clock);
+  verifyExpertise = new VerifyExpertise(claims, fixedClock(VERIFIED_AT));
 });
 
 describe('VerifyExpertise', () => {

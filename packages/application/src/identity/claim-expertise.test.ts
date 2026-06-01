@@ -1,57 +1,20 @@
-import {
-  ExpertiseClaim,
-  ExpertiseClaimId,
-  ExpertiseTag,
-  InvalidExpertiseTagError,
-  InvalidIdentifierError,
-  Timestamp,
-  UserId,
-} from '@hestia/domain';
+import { InvalidExpertiseTagError, InvalidIdentifierError, Timestamp } from '@hestia/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { Clock } from '../ports/clock.js';
-import type { IdGenerator } from '../ports/id-generator.js';
-import type { ExpertiseClaimRepository } from './expertise-claim-repository.js';
+import {
+  fixedClock,
+  InMemoryExpertiseClaimRepository,
+  SequentialIdGenerator,
+} from '../testing/index.js';
 import { ClaimExpertise, DuplicateExpertiseClaimError } from './claim-expertise.js';
 
-class InMemoryExpertiseClaimRepository implements ExpertiseClaimRepository {
-  readonly items: ExpertiseClaim[] = [];
-
-  async save(claim: ExpertiseClaim): Promise<void> {
-    const index = this.items.findIndex((item) => item.id === claim.id);
-    if (index >= 0) {
-      this.items[index] = claim;
-    } else {
-      this.items.push(claim);
-    }
-  }
-
-  async findById(id: ExpertiseClaimId): Promise<ExpertiseClaim | null> {
-    return this.items.find((item) => item.id === id) ?? null;
-  }
-
-  async existsByUserAndTag(userId: UserId, tag: ExpertiseTag): Promise<boolean> {
-    return this.items.some((item) => item.userId === userId && item.tag.equals(tag));
-  }
-}
-
-class SequentialIdGenerator implements IdGenerator {
-  private count = 0;
-
-  generate(): string {
-    this.count += 1;
-    return `xpc_${this.count}`;
-  }
-}
-
 const NOW = Timestamp.fromISOString('2026-06-01T09:00:00.000Z');
-const clock: Clock = { now: () => NOW };
 
 let claims: InMemoryExpertiseClaimRepository;
 let claimExpertise: ClaimExpertise;
 
 beforeEach(() => {
   claims = new InMemoryExpertiseClaimRepository();
-  claimExpertise = new ClaimExpertise(claims, new SequentialIdGenerator(), clock);
+  claimExpertise = new ClaimExpertise(claims, new SequentialIdGenerator('xpc'), fixedClock(NOW));
 });
 
 describe('ClaimExpertise', () => {

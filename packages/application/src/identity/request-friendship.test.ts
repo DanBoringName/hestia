@@ -1,61 +1,29 @@
 import {
   CannotBefriendSelfError,
-  Friendship,
   FriendshipId,
   InvalidIdentifierError,
   Timestamp,
-  UserId,
 } from '@hestia/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { Clock } from '../ports/clock.js';
-import type { IdGenerator } from '../ports/id-generator.js';
-import type { FriendshipRepository } from './friendship-repository.js';
+import {
+  fixedClock,
+  InMemoryFriendshipRepository,
+  SequentialIdGenerator,
+} from '../testing/index.js';
 import { DuplicateFriendshipError, RequestFriendship } from './request-friendship.js';
 
-class InMemoryFriendshipRepository implements FriendshipRepository {
-  readonly items: Friendship[] = [];
-
-  async save(friendship: Friendship): Promise<void> {
-    const index = this.items.findIndex((item) => item.id === friendship.id);
-    if (index >= 0) {
-      this.items[index] = friendship;
-    } else {
-      this.items.push(friendship);
-    }
-  }
-
-  async findById(id: FriendshipId): Promise<Friendship | null> {
-    return this.items.find((item) => item.id === id) ?? null;
-  }
-
-  async existsActiveBetween(a: UserId, b: UserId): Promise<boolean> {
-    return this.items.some(
-      (f) =>
-        (f.status === 'pending' || f.status === 'accepted') &&
-        ((f.requesterId === a && f.addresseeId === b) ||
-          (f.requesterId === b && f.addresseeId === a)),
-    );
-  }
-}
-
-class SequentialIdGenerator implements IdGenerator {
-  private count = 0;
-
-  generate(): string {
-    this.count += 1;
-    return `frn_${this.count}`;
-  }
-}
-
 const NOW = Timestamp.fromISOString('2026-06-01T09:00:00.000Z');
-const clock: Clock = { now: () => NOW };
 
 let friendships: InMemoryFriendshipRepository;
 let requestFriendship: RequestFriendship;
 
 beforeEach(() => {
   friendships = new InMemoryFriendshipRepository();
-  requestFriendship = new RequestFriendship(friendships, new SequentialIdGenerator(), clock);
+  requestFriendship = new RequestFriendship(
+    friendships,
+    new SequentialIdGenerator('frn'),
+    fixedClock(NOW),
+  );
 });
 
 describe('RequestFriendship', () => {

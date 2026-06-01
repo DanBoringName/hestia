@@ -1,25 +1,7 @@
 import { Block, BlockId, InvalidIdentifierError, Timestamp, UserId } from '@hestia/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { BlockRepository } from './block-repository.js';
+import { InMemoryBlockRepository } from '../testing/index.js';
 import { UnblockUser } from './unblock-user.js';
-
-class InMemoryBlockRepository implements BlockRepository {
-  items: Block[] = [];
-
-  async save(block: Block): Promise<void> {
-    this.items.push(block);
-  }
-
-  async existsByBlockerAndBlocked(blockerId: UserId, blockedId: UserId): Promise<boolean> {
-    return this.items.some((b) => b.blockerId === blockerId && b.blockedId === blockedId);
-  }
-
-  async removeByBlockerAndBlocked(blockerId: UserId, blockedId: UserId): Promise<void> {
-    this.items = this.items.filter(
-      (b) => !(b.blockerId === blockerId && b.blockedId === blockedId),
-    );
-  }
-}
 
 const NOW = Timestamp.fromISOString('2026-06-01T09:00:00.000Z');
 

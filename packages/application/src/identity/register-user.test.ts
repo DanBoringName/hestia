@@ -1,33 +1,7 @@
-import { Email, Handle, InvalidEmailError, User } from '@hestia/domain';
+import { Email, InvalidEmailError } from '@hestia/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { IdGenerator } from '../ports/id-generator.js';
+import { InMemoryUserRepository, SequentialIdGenerator } from '../testing/index.js';
 import { EmailTakenError, HandleTakenError, RegisterUser } from './register-user.js';
-import type { UserRepository } from './user-repository.js';
-
-class InMemoryUserRepository implements UserRepository {
-  private readonly users: User[] = [];
-
-  async save(user: User): Promise<void> {
-    this.users.push(user);
-  }
-
-  async existsByHandle(handle: Handle): Promise<boolean> {
-    return this.users.some((user) => user.handle.equals(handle));
-  }
-
-  async existsByEmail(email: Email): Promise<boolean> {
-    return this.users.some((user) => user.email.equals(email));
-  }
-}
-
-class SequentialIdGenerator implements IdGenerator {
-  private count = 0;
-
-  generate(): string {
-    this.count += 1;
-    return `usr_${this.count}`;
-  }
-}
 
 const validInput = {
   email: 'ada@example.com',
@@ -36,13 +10,11 @@ const validInput = {
 };
 
 let users: InMemoryUserRepository;
-let ids: SequentialIdGenerator;
 let registerUser: RegisterUser;
 
 beforeEach(() => {
   users = new InMemoryUserRepository();
-  ids = new SequentialIdGenerator();
-  registerUser = new RegisterUser(users, ids);
+  registerUser = new RegisterUser(users, new SequentialIdGenerator('usr'));
 });
 
 describe('RegisterUser', () => {
