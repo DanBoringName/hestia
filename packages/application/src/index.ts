@@ -8,3 +8,5 @@ export {
   RegisterUser,
 } from './identity/register-user.js';
 export type { RegisterUserInput } from './identity/register-user.js';
+export { DuplicateFriendshipError, RequestFriendship } from './identity/request-friendship.js';
+export type { RequestFriendshipInput } from './identity/request-friendship.js';
