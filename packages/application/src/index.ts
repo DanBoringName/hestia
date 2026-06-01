@@ -3,6 +3,7 @@ export type { IdGenerator } from './ports/id-generator.js';
 export type { UserRepository } from './identity/user-repository.js';
 export type { FriendshipRepository } from './identity/friendship-repository.js';
 export type { BlockRepository } from './identity/block-repository.js';
+export type { ExpertiseClaimRepository } from './identity/expertise-claim-repository.js';
 export {
   EmailTakenError,
   HandleTakenError,
