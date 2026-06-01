@@ -9,3 +9,10 @@ export {
   HANDLE_MIN_LENGTH,
   InvalidHandleError,
 } from './identity/handle.js';
+export {
+  DisplayName,
+  DISPLAY_NAME_MAX_LENGTH,
+  InvalidDisplayNameError,
+} from './identity/display-name.js';
+export { User, UserId } from './identity/user.js';
+export type { RegisterUserProps } from './identity/user.js';
