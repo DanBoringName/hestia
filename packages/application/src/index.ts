@@ -26,3 +26,8 @@ export { UnblockUser } from './identity/unblock-user.js';
 export type { UnblockUserInput } from './identity/unblock-user.js';
 export { ClaimExpertise, DuplicateExpertiseClaimError } from './identity/claim-expertise.js';
 export type { ClaimExpertiseInput } from './identity/claim-expertise.js';
+export { ExpertiseClaimNotFoundError, VerifyExpertise } from './identity/verify-expertise.js';
+export type {
+  VerifyExpertiseInput,
+  VerifyExpertiseMethod,
+} from './identity/verify-expertise.js';
