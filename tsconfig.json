@@ -1,5 +1,9 @@
 {
   "// note": "Solution-style root config. Lists every composite package as a reference so `tsc --build` builds the monorepo in dependency order. It compiles nothing itself.",
   "files": [],
-  "references": [{ "path": "./packages/domain" }, { "path": "./packages/application" }]
+  "references": [
+    { "path": "./packages/domain" },
+    { "path": "./packages/application" },
+    { "path": "./apps/api" }
+  ]
 }

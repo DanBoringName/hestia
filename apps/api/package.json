@@ -1,0 +1,23 @@
+{
+  "name": "@hestia/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Fastify HTTP/WebSocket API for Hestia — adapters and the composition root wiring the application layer to the outside world.",
+  "scripts": {
+    "build": "tsc --build",
+    "start": "node dist/main.js",
+    "dev": "tsx watch src/main.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@hestia/application": "*",
+    "@hestia/domain": "*",
+    "fastify": "^5.2.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  }
+}
