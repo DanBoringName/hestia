@@ -21,3 +21,5 @@ export type {
 } from './identity/respond-to-friendship.js';
 export { BlockUser } from './identity/block-user.js';
 export type { BlockUserInput } from './identity/block-user.js';
+export { UnblockUser } from './identity/unblock-user.js';
+export type { UnblockUserInput } from './identity/unblock-user.js';
