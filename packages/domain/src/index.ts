@@ -1,5 +1,6 @@
 export { DomainError, isDomainError } from './shared/domain-error.js';
 export type { DomainErrorCategory } from './shared/domain-error.js';
+export { Entity } from './shared/entity.js';
 export { defineIdentifier, InvalidIdentifierError } from './shared/identifier.js';
 export type { Identifier } from './shared/identifier.js';
 export { InvalidTimestampError, Timestamp } from './shared/timestamp.js';

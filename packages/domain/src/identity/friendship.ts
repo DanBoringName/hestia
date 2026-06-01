@@ -1,4 +1,5 @@
 import { DomainError } from '../shared/domain-error.js';
+import { Entity } from '../shared/entity.js';
 import { defineIdentifier, type Identifier } from '../shared/identifier.js';
 import type { Timestamp } from '../shared/timestamp.js';
 import type { UserId } from './user.js';
@@ -43,16 +44,18 @@ export interface RequestFriendshipProps {
  * addressee answers a request; either participant may unfriend. State changes
  * return a new instance; equality is identity-based.
  */
-export class Friendship {
+export class Friendship extends Entity<FriendshipId> {
   private constructor(
-    readonly id: FriendshipId,
+    id: FriendshipId,
     readonly requesterId: UserId,
     readonly addresseeId: UserId,
     readonly status: FriendshipStatus,
     readonly requestedAt: Timestamp,
     readonly respondedAt: Timestamp | undefined,
     readonly endedAt: Timestamp | undefined,
-  ) {}
+  ) {
+    super(id);
+  }
 
   static request(props: RequestFriendshipProps): Friendship {
     if (props.requesterId === props.addresseeId) {
@@ -117,11 +120,6 @@ export class Friendship {
       this.respondedAt,
       at,
     );
-  }
-
-  /** Identity equality: same `id` means the same friendship, ignoring attributes. */
-  equals(other: Friendship): boolean {
-    return this.id === other.id;
   }
 
   private assertStatus(expected: FriendshipStatus): void {

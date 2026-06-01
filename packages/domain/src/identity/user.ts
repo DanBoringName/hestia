@@ -1,3 +1,4 @@
+import { Entity } from '../shared/entity.js';
 import { defineIdentifier, type Identifier } from '../shared/identifier.js';
 import type { DisplayName } from './display-name.js';
 import type { Email } from './email.js';
@@ -21,13 +22,15 @@ export interface RegisterUserProps {
  * adapter (Better Auth), not the domain. State changes return a new instance
  * rather than mutating in place, keeping the entity easy to reason about and test.
  */
-export class User {
+export class User extends Entity<UserId> {
   private constructor(
-    readonly id: UserId,
+    id: UserId,
     readonly email: Email,
     readonly handle: Handle,
     readonly displayName: DisplayName,
-  ) {}
+  ) {
+    super(id);
+  }
 
   static register(props: RegisterUserProps): User {
     return new User(props.id, props.email, props.handle, props.displayName);
@@ -43,10 +46,5 @@ export class User {
 
   rename(displayName: DisplayName): User {
     return new User(this.id, this.email, this.handle, displayName);
-  }
-
-  /** Identity equality: same `id` means the same user, ignoring attributes. */
-  equals(other: User): boolean {
-    return this.id === other.id;
   }
 }

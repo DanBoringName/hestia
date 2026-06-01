@@ -1,4 +1,5 @@
 import { DomainError } from '../shared/domain-error.js';
+import { Entity } from '../shared/entity.js';
 import { defineIdentifier, type Identifier } from '../shared/identifier.js';
 import type { Timestamp } from '../shared/timestamp.js';
 import type { ExpertiseTag } from './expertise-tag.js';
@@ -26,15 +27,17 @@ export interface ClaimExpertiseProps {
  * verified or have its verification revoked; state changes return a new
  * instance. `verifiedAt` is present exactly when the claim is verified.
  */
-export class ExpertiseClaim {
+export class ExpertiseClaim extends Entity<ExpertiseClaimId> {
   private constructor(
-    readonly id: ExpertiseClaimId,
+    id: ExpertiseClaimId,
     readonly userId: UserId,
     readonly tag: ExpertiseTag,
     readonly verification: ExpertiseVerification,
     readonly claimedAt: Timestamp,
     readonly verifiedAt: Timestamp | undefined,
-  ) {}
+  ) {
+    super(id);
+  }
 
   static claim(props: ClaimExpertiseProps): ExpertiseClaim {
     return new ExpertiseClaim(
@@ -83,10 +86,5 @@ export class ExpertiseClaim {
       this.claimedAt,
       undefined,
     );
-  }
-
-  /** Identity equality: same `id` means the same claim, ignoring attributes. */
-  equals(other: ExpertiseClaim): boolean {
-    return this.id === other.id;
   }
 }

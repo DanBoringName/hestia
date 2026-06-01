@@ -1,4 +1,5 @@
 import { DomainError } from '../shared/domain-error.js';
+import { Entity } from '../shared/entity.js';
 import { defineIdentifier, type Identifier } from '../shared/identifier.js';
 import type { Timestamp } from '../shared/timestamp.js';
 import type { UserId } from './user.js';
@@ -29,13 +30,15 @@ export interface PlaceBlockProps {
  * active, and unblocking removes it (a repository delete), so there is no
  * lifecycle state here.
  */
-export class Block {
+export class Block extends Entity<BlockId> {
   private constructor(
-    readonly id: BlockId,
+    id: BlockId,
     readonly blockerId: UserId,
     readonly blockedId: UserId,
     readonly blockedAt: Timestamp,
-  ) {}
+  ) {
+    super(id);
+  }
 
   static place(props: PlaceBlockProps): Block {
     if (props.blockerId === props.blockedId) {
@@ -48,10 +51,5 @@ export class Block {
   /** Whether this block concerns the given user, as either party. */
   involves(userId: UserId): boolean {
     return this.blockerId === userId || this.blockedId === userId;
-  }
-
-  /** Identity equality: same `id` means the same block, ignoring attributes. */
-  equals(other: Block): boolean {
-    return this.id === other.id;
   }
 }
