@@ -16,3 +16,9 @@ export {
 } from './identity/display-name.js';
 export { User, UserId } from './identity/user.js';
 export type { RegisterUserProps } from './identity/user.js';
+export {
+  ExpertiseTag,
+  EXPERTISE_TAG_MAX_LENGTH,
+  EXPERTISE_TAG_MIN_LENGTH,
+  InvalidExpertiseTagError,
+} from './identity/expertise-tag.js';
