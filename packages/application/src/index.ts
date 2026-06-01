@@ -10,3 +10,11 @@ export {
 export type { RegisterUserInput } from './identity/register-user.js';
 export { DuplicateFriendshipError, RequestFriendship } from './identity/request-friendship.js';
 export type { RequestFriendshipInput } from './identity/request-friendship.js';
+export {
+  FriendshipNotFoundError,
+  RespondToFriendship,
+} from './identity/respond-to-friendship.js';
+export type {
+  FriendshipResponse,
+  RespondToFriendshipInput,
+} from './identity/respond-to-friendship.js';
