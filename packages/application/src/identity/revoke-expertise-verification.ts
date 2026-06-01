@@ -1,4 +1,5 @@
 import { ExpertiseClaim, ExpertiseClaimId } from '@hestia/domain';
+import { requireFound } from '../shared/require-found.js';
 import type { ExpertiseClaimRepository } from './expertise-claim-repository.js';
 import { ExpertiseClaimNotFoundError } from './verify-expertise.js';
 
@@ -15,10 +16,10 @@ export class RevokeExpertiseVerification {
   constructor(private readonly claims: ExpertiseClaimRepository) {}
 
   async execute(input: RevokeExpertiseVerificationInput): Promise<ExpertiseClaim> {
-    const claim = await this.claims.findById(ExpertiseClaimId(input.claimId));
-    if (claim === null) {
-      throw new ExpertiseClaimNotFoundError();
-    }
+    const claim = requireFound(
+      await this.claims.findById(ExpertiseClaimId(input.claimId)),
+      () => new ExpertiseClaimNotFoundError(),
+    );
 
     const revoked = claim.revokeVerification();
     await this.claims.save(revoked);

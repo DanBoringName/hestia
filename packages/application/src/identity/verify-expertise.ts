@@ -6,6 +6,7 @@ import {
   UserId,
 } from '@hestia/domain';
 import type { Clock } from '../ports/clock.js';
+import { requireFound } from '../shared/require-found.js';
 import type { ExpertiseClaimRepository } from './expertise-claim-repository.js';
 
 export class ExpertiseClaimNotFoundError extends DomainError {
@@ -39,10 +40,10 @@ export class VerifyExpertise {
   ) {}
 
   async execute(input: VerifyExpertiseInput): Promise<ExpertiseClaim> {
-    const claim = await this.claims.findById(ExpertiseClaimId(input.claimId));
-    if (claim === null) {
-      throw new ExpertiseClaimNotFoundError();
-    }
+    const claim = requireFound(
+      await this.claims.findById(ExpertiseClaimId(input.claimId)),
+      () => new ExpertiseClaimNotFoundError(),
+    );
 
     const verified = claim.verify(toVerification(input.verification), this.clock.now());
     await this.claims.save(verified);

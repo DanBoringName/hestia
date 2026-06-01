@@ -1,5 +1,6 @@
 import { DomainError, Friendship, FriendshipId, UserId } from '@hestia/domain';
 import type { Clock } from '../ports/clock.js';
+import { requireFound } from '../shared/require-found.js';
 import type { FriendshipRepository } from './friendship-repository.js';
 
 export class FriendshipNotFoundError extends DomainError {
@@ -35,10 +36,10 @@ export class RespondToFriendship {
     const friendshipId = FriendshipId(input.friendshipId);
     const actorId = UserId(input.actorId);
 
-    const friendship = await this.friendships.findById(friendshipId);
-    if (friendship === null) {
-      throw new FriendshipNotFoundError();
-    }
+    const friendship = requireFound(
+      await this.friendships.findById(friendshipId),
+      () => new FriendshipNotFoundError(),
+    );
 
     const respondedAt = this.clock.now();
     const updated =
