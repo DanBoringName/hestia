@@ -1,0 +1,23 @@
+{
+  "name": "@hestia/application",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Application layer for Hestia — use cases orchestrating the domain through ports. No framework or IO imports; concrete adapters live in apps/*.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@hestia/domain": "*"
+  }
+}
