@@ -1,4 +1,5 @@
 import { DomainError } from '../shared/domain-error.js';
+import { StringValueObject } from '../shared/value-object.js';
 
 export const HANDLE_MIN_LENGTH = 3;
 export const HANDLE_MAX_LENGTH = 30;
@@ -21,14 +22,12 @@ export class InvalidHandleError extends DomainError {
 }
 
 /**
- * A unique username. Construct via {@link Handle.create}; the constructor is
- * private so an instance is always valid. Input is trimmed and lower-cased to
+ * A unique username. Construct via {@link Handle.create}, which validates and
+ * normalizes; instances are always valid. Input is trimmed and lower-cased to
  * a canonical form, then required to start with a letter and contain only
  * letters, digits, and underscores.
  */
-export class Handle {
-  private constructor(readonly value: string) {}
-
+export class Handle extends StringValueObject {
   static create(raw: string): Handle {
     const normalized = raw.trim().toLowerCase();
 
@@ -47,13 +46,5 @@ export class Handle {
     }
 
     return new Handle(normalized);
-  }
-
-  equals(other: Handle): boolean {
-    return this.value === other.value;
-  }
-
-  toString(): string {
-    return this.value;
   }
 }

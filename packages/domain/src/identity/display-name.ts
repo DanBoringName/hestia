@@ -1,4 +1,5 @@
 import { DomainError } from '../shared/domain-error.js';
+import { StringValueObject } from '../shared/value-object.js';
 
 export const DISPLAY_NAME_MAX_LENGTH = 50;
 
@@ -17,9 +18,7 @@ export class InvalidDisplayNameError extends DomainError {
  * whitespace is trimmed. Control characters are rejected so a name can never
  * break layout or screen-reader output.
  */
-export class DisplayName {
-  private constructor(readonly value: string) {}
-
+export class DisplayName extends StringValueObject {
   static create(raw: string): DisplayName {
     const trimmed = raw.trim();
 
@@ -34,14 +33,6 @@ export class DisplayName {
     }
 
     return new DisplayName(trimmed);
-  }
-
-  equals(other: DisplayName): boolean {
-    return this.value === other.value;
-  }
-
-  toString(): string {
-    return this.value;
   }
 }
 

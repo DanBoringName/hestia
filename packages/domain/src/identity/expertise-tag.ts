@@ -1,4 +1,5 @@
 import { DomainError } from '../shared/domain-error.js';
+import { StringValueObject } from '../shared/value-object.js';
 
 export const EXPERTISE_TAG_MIN_LENGTH = 2;
 export const EXPERTISE_TAG_MAX_LENGTH = 50;
@@ -25,9 +26,7 @@ export class InvalidExpertiseTagError extends DomainError {
  * Used both on a user's {@link ExpertiseClaim} and when a debate is gated by a
  * required expertise topic.
  */
-export class ExpertiseTag {
-  private constructor(readonly value: string) {}
-
+export class ExpertiseTag extends StringValueObject {
   static create(raw: string): ExpertiseTag {
     const slug = raw
       .trim()
@@ -49,13 +48,5 @@ export class ExpertiseTag {
     }
 
     return new ExpertiseTag(slug);
-  }
-
-  equals(other: ExpertiseTag): boolean {
-    return this.value === other.value;
-  }
-
-  toString(): string {
-    return this.value;
   }
 }

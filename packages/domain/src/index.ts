@@ -3,6 +3,7 @@ export type { DomainErrorCategory } from './shared/domain-error.js';
 export { defineIdentifier, InvalidIdentifierError } from './shared/identifier.js';
 export type { Identifier } from './shared/identifier.js';
 export { InvalidTimestampError, Timestamp } from './shared/timestamp.js';
+export { StringValueObject } from './shared/value-object.js';
 export { Email, InvalidEmailError } from './identity/email.js';
 export {
   Handle,

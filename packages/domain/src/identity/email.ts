@@ -1,4 +1,5 @@
 import { DomainError } from '../shared/domain-error.js';
+import { StringValueObject } from '../shared/value-object.js';
 
 // Pragmatic, deliberately non-exhaustive shape check: one `@`, non-empty local
 // and domain parts, a dotted domain, and no whitespace. Full RFC 5322 validation
@@ -20,12 +21,10 @@ export class InvalidEmailError extends DomainError {
 
 /**
  * An email address, normalized to a trimmed, lower-cased canonical form so that
- * equality and uniqueness are case-insensitive. Construct via {@link Email.create};
- * the constructor is private so an `Email` instance is always valid.
+ * equality and uniqueness are case-insensitive. Construct via {@link Email.create},
+ * which validates and normalizes; instances are always valid.
  */
-export class Email {
-  private constructor(readonly value: string) {}
-
+export class Email extends StringValueObject {
   static create(raw: string): Email {
     const normalized = raw.trim().toLowerCase();
 
@@ -48,13 +47,5 @@ export class Email {
    */
   get domain(): string {
     return this.value.slice(this.value.lastIndexOf('@') + 1);
-  }
-
-  equals(other: Email): boolean {
-    return this.value === other.value;
-  }
-
-  toString(): string {
-    return this.value;
   }
 }
