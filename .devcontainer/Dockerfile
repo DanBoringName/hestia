@@ -15,9 +15,4 @@ RUN apt-get update \
        ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
-
-ARG USERNAME=danja
-RUN groupmod --new-name "${USERNAME}" node \
-  && usermod --login "${USERNAME}" --home "/home/${USERNAME}" --move-home node
-
-USER ${USERNAME}
+USER node

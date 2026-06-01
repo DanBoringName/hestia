@@ -21,7 +21,7 @@ services:
       - ..:/workspaces/hestia:cached
       # Mount the host's SSH keys (read-only) so git over SSH works inside the
       # container. ${HOME} resolves on the host at `docker compose` time.
-      - ${HOME}/.ssh:/home/danja/.ssh:ro
+      - ${HOME}/.ssh:/home/node/.ssh:ro
     environment:
       DATABASE_URL: postgres://hestia:hestia_dev_pw@postgres:5432/hestia
       REDIS_URL: redis://redis:6379
