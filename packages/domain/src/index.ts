@@ -31,3 +31,9 @@ export type {
   VerificationMatchers,
   VerificationMethod,
 } from './identity/expertise-verification.js';
+export {
+  ExpertiseClaim,
+  ExpertiseClaimId,
+  IllegalVerificationError,
+} from './identity/expertise-claim.js';
+export type { ClaimExpertiseProps } from './identity/expertise-claim.js';
