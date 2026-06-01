@@ -19,3 +19,5 @@ export type {
   FriendshipResponse,
   RespondToFriendshipInput,
 } from './identity/respond-to-friendship.js';
+export { BlockUser } from './identity/block-user.js';
+export type { BlockUserInput } from './identity/block-user.js';
