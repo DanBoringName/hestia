@@ -22,3 +22,11 @@ export {
   EXPERTISE_TAG_MIN_LENGTH,
   InvalidExpertiseTagError,
 } from './identity/expertise-tag.js';
+export {
+  ExpertiseVerification,
+  InvalidVerificationError,
+} from './identity/expertise-verification.js';
+export type {
+  VerificationMatchers,
+  VerificationMethod,
+} from './identity/expertise-verification.js';
