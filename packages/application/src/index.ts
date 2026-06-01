@@ -31,3 +31,5 @@ export type {
   VerifyExpertiseInput,
   VerifyExpertiseMethod,
 } from './identity/verify-expertise.js';
+export { RevokeExpertiseVerification } from './identity/revoke-expertise-verification.js';
+export type { RevokeExpertiseVerificationInput } from './identity/revoke-expertise-verification.js';
