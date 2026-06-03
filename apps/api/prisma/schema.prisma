@@ -1,0 +1,26 @@
+// Prisma is an adapter, not the domain. This schema is the persistence shape for
+// the Identity context; domain reconstruction happens in the repository adapters.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  // Application-generated id (see IdGenerator port); not a DB default.
+  id          String @id
+  email       String @unique
+  handle      String @unique
+  displayName String
+
+  // DB-managed audit columns. The domain User does not track these; they exist
+  // for operational visibility and are not part of domain reconstruction.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
