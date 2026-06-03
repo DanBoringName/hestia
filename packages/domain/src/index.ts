@@ -38,7 +38,7 @@ export {
   ExpertiseClaimId,
   IllegalVerificationError,
 } from './identity/expertise-claim.js';
-export type { ClaimExpertiseProps } from './identity/expertise-claim.js';
+export type { ClaimExpertiseProps, ExpertiseClaimState } from './identity/expertise-claim.js';
 export {
   CannotBefriendSelfError,
   Friendship,
@@ -47,6 +47,7 @@ export {
   IllegalFriendshipTransitionError,
 } from './identity/friendship.js';
 export type {
+  FriendshipState,
   FriendshipStatus,
   RequestFriendshipProps,
 } from './identity/friendship.js';

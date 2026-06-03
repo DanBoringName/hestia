@@ -35,6 +35,16 @@ export interface RequestFriendshipProps {
   readonly requestedAt: Timestamp;
 }
 
+export interface FriendshipState {
+  readonly id: FriendshipId;
+  readonly requesterId: UserId;
+  readonly addresseeId: UserId;
+  readonly status: FriendshipStatus;
+  readonly requestedAt: Timestamp;
+  readonly respondedAt: Timestamp | undefined;
+  readonly endedAt: Timestamp | undefined;
+}
+
 /**
  * A mutual (both-parties-accept) friendship, modeled as a state machine:
  * `pending → accepted | declined`, and `accepted → ended` (unfriend).
@@ -70,6 +80,22 @@ export class Friendship extends Entity<FriendshipId> {
       props.requestedAt,
       undefined,
       undefined,
+    );
+  }
+
+  /**
+   * Rebuilds a friendship from persisted state, bypassing transition rules.
+   * For repository use only — the stored state is already valid.
+   */
+  static reconstitute(state: FriendshipState): Friendship {
+    return new Friendship(
+      state.id,
+      state.requesterId,
+      state.addresseeId,
+      state.status,
+      state.requestedAt,
+      state.respondedAt,
+      state.endedAt,
     );
   }
 

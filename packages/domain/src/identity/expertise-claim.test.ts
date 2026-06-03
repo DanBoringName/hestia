@@ -95,6 +95,24 @@ describe('ExpertiseClaim.revokeVerification', () => {
   });
 });
 
+describe('ExpertiseClaim.reconstitute', () => {
+  it('rebuilds a verified claim from persisted state', () => {
+    const claim = ExpertiseClaim.reconstitute({
+      id: ExpertiseClaimId('xpc_1'),
+      userId: UserId('usr_ada'),
+      tag: ExpertiseTag.create('marine-biology'),
+      verification: emailDomain,
+      claimedAt: CLAIMED_AT,
+      verifiedAt: VERIFIED_AT,
+    });
+
+    expect(claim.isVerified).toBe(true);
+    expect(claim.verification.equals(emailDomain)).toBe(true);
+    expect(claim.verifiedAt?.equals(VERIFIED_AT)).toBe(true);
+    expect(claim.revokeVerification().isVerified).toBe(false);
+  });
+});
+
 describe('ExpertiseClaim equality', () => {
   it('is identity-based: same id is equal despite differing verification', () => {
     const claim = ExpertiseClaim.claim(sampleProps());

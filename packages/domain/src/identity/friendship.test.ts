@@ -109,6 +109,25 @@ describe('Friendship.unfriend', () => {
   });
 });
 
+describe('Friendship.reconstitute', () => {
+  it('rebuilds persisted state verbatim and supports further transitions', () => {
+    const accepted = Friendship.reconstitute({
+      id: FriendshipId('frn_1'),
+      requesterId: REQUESTER,
+      addresseeId: ADDRESSEE,
+      status: 'accepted',
+      requestedAt: REQUESTED_AT,
+      respondedAt: RESPONDED_AT,
+      endedAt: undefined,
+    });
+
+    expect(accepted.status).toBe('accepted');
+    expect(accepted.isActive).toBe(true);
+    expect(accepted.respondedAt?.equals(RESPONDED_AT)).toBe(true);
+    expect(accepted.unfriend(REQUESTER, ENDED_AT).status).toBe('ended');
+  });
+});
+
 describe('Friendship equality', () => {
   it('is identity-based: same id is equal despite differing status', () => {
     const pending = request();

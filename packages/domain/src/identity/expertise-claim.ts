@@ -21,6 +21,15 @@ export interface ClaimExpertiseProps {
   readonly claimedAt: Timestamp;
 }
 
+export interface ExpertiseClaimState {
+  readonly id: ExpertiseClaimId;
+  readonly userId: UserId;
+  readonly tag: ExpertiseTag;
+  readonly verification: ExpertiseVerification;
+  readonly claimedAt: Timestamp;
+  readonly verifiedAt: Timestamp | undefined;
+}
+
 /**
  * A user's assertion of expertise in one topic, plus how it has been verified.
  * An entity identified by `id`. Starts self-asserted (unverified) and can be
@@ -47,6 +56,21 @@ export class ExpertiseClaim extends Entity<ExpertiseClaimId> {
       ExpertiseVerification.unverified(),
       props.claimedAt,
       undefined,
+    );
+  }
+
+  /**
+   * Rebuilds a claim from persisted state, bypassing the verify/revoke rules.
+   * For repository use only — the stored state is already valid.
+   */
+  static reconstitute(state: ExpertiseClaimState): ExpertiseClaim {
+    return new ExpertiseClaim(
+      state.id,
+      state.userId,
+      state.tag,
+      state.verification,
+      state.claimedAt,
+      state.verifiedAt,
     );
   }
 
