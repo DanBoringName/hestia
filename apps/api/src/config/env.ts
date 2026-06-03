@@ -7,6 +7,7 @@ const envSchema = z.object({
   LOG_LEVEL: z
     .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
     .default('info'),
+  DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
 });
 
 export type Env = z.infer<typeof envSchema>;
