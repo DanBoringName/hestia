@@ -1,26 +1,10 @@
-import { RegisterUser } from '@hestia/application';
-import { InMemoryUserRepository, SequentialIdGenerator } from '@hestia/application/testing';
 import { describe, expect, it } from 'vitest';
 import { buildApp } from './app.js';
-import type { Env } from './config/env.js';
-import type { Container } from './container.js';
-
-const env: Env = {
-  NODE_ENV: 'test',
-  PORT: 3000,
-  HOST: '0.0.0.0',
-  LOG_LEVEL: 'silent',
-  DATABASE_URL: 'postgres://unused-in-memory',
-};
-
-function inMemoryContainer(): Container {
-  const registerUser = new RegisterUser(new InMemoryUserRepository(), new SequentialIdGenerator('usr'));
-  return { registerUser, shutdown: () => Promise.resolve() };
-}
+import { inMemoryContainer, testEnv } from './testing/in-memory-container.js';
 
 describe('GET /health', () => {
   it('responds with ok', async () => {
-    const app = buildApp(env, inMemoryContainer());
+    const app = buildApp(testEnv, inMemoryContainer());
 
     const response = await app.inject({ method: 'GET', url: '/health' });
 
@@ -33,7 +17,7 @@ describe('GET /health', () => {
 
 describe('POST /users', () => {
   it('registers a user and returns 201 with the normalized representation', async () => {
-    const app = buildApp(env, inMemoryContainer());
+    const app = buildApp(testEnv, inMemoryContainer());
 
     const response = await app.inject({
       method: 'POST',
@@ -53,7 +37,7 @@ describe('POST /users', () => {
   });
 
   it('returns 400 when the body is missing fields', async () => {
-    const app = buildApp(env, inMemoryContainer());
+    const app = buildApp(testEnv, inMemoryContainer());
 
     const response = await app.inject({
       method: 'POST',
@@ -68,7 +52,7 @@ describe('POST /users', () => {
   });
 
   it('maps a domain validation error to 400', async () => {
-    const app = buildApp(env, inMemoryContainer());
+    const app = buildApp(testEnv, inMemoryContainer());
 
     const response = await app.inject({
       method: 'POST',
@@ -83,7 +67,7 @@ describe('POST /users', () => {
   });
 
   it('maps a uniqueness conflict to 409', async () => {
-    const app = buildApp(env, inMemoryContainer());
+    const app = buildApp(testEnv, inMemoryContainer());
     const payload = { email: 'ada@example.com', handle: 'ada', displayName: 'Ada' };
     await app.inject({ method: 'POST', url: '/users', payload });
 
