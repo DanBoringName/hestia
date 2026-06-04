@@ -2,6 +2,7 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import type { Env } from './config/env.js';
 import type { Container } from './container.js';
 import { domainErrorHandler } from './errors/error-handler.js';
+import { registerBlockRoutes } from './routes/blocks.js';
 import { registerFriendshipRoutes } from './routes/friendships.js';
 import { registerHealthRoute } from './routes/health.js';
 import { registerUserRoutes } from './routes/users.js';
@@ -22,6 +23,7 @@ export function buildApp(env: Env, container: Container): FastifyInstance {
   registerHealthRoute(app);
   registerUserRoutes(app, container.registerUser);
   registerFriendshipRoutes(app, container.requestFriendship, container.respondToFriendship);
+  registerBlockRoutes(app, container.blockUser, container.unblockUser);
 
   return app;
 }

@@ -1,8 +1,15 @@
-import { RegisterUser, RequestFriendship, RespondToFriendship } from '@hestia/application';
+import {
+  BlockUser,
+  RegisterUser,
+  RequestFriendship,
+  RespondToFriendship,
+  UnblockUser,
+} from '@hestia/application';
 import { PrismaClient } from '@prisma/client';
 import { SystemClock } from './adapters/system-clock.js';
 import { UuidIdGenerator } from './adapters/uuid-id-generator.js';
 import type { Env } from './config/env.js';
+import { PrismaBlockRepository } from './identity/prisma-block-repository.js';
 import { PrismaFriendshipRepository } from './identity/prisma-friendship-repository.js';
 import { PrismaUserRepository } from './identity/prisma-user-repository.js';
 
@@ -15,6 +22,8 @@ export interface Container {
   readonly registerUser: RegisterUser;
   readonly requestFriendship: RequestFriendship;
   readonly respondToFriendship: RespondToFriendship;
+  readonly blockUser: BlockUser;
+  readonly unblockUser: UnblockUser;
   shutdown(): Promise<void>;
 }
 
@@ -26,11 +35,14 @@ export function createContainer(env: Env): Container {
 
   const users = new PrismaUserRepository(prisma);
   const friendships = new PrismaFriendshipRepository(prisma);
+  const blocks = new PrismaBlockRepository(prisma);
 
   return {
     registerUser: new RegisterUser(users, ids),
     requestFriendship: new RequestFriendship(friendships, ids, clock),
     respondToFriendship: new RespondToFriendship(friendships, clock),
+    blockUser: new BlockUser(blocks, ids, clock),
+    unblockUser: new UnblockUser(blocks),
     shutdown: () => prisma.$disconnect(),
   };
 }
