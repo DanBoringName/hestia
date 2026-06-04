@@ -48,3 +48,19 @@ model Friendship {
   @@index([addresseeId])
   @@map("friendships")
 }
+
+model Block {
+  id        String   @id
+  blockerId String
+  blockedId String
+  blockedAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Directional and unique per (blocker, blocked) pair — backs idempotent
+  // placement and serves the existence/removal lookups. The leftmost column
+  // also supports "blocks placed by user" queries (discovery feed hiding).
+  @@unique([blockerId, blockedId])
+  @@map("blocks")
+}
