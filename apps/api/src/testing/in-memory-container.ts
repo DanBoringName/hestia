@@ -1,13 +1,17 @@
 import {
   BlockUser,
+  ClaimExpertise,
   RegisterUser,
   RequestFriendship,
   RespondToFriendship,
+  RevokeExpertiseVerification,
   UnblockUser,
+  VerifyExpertise,
 } from '@hestia/application';
 import {
   fixedClock,
   InMemoryBlockRepository,
+  InMemoryExpertiseClaimRepository,
   InMemoryFriendshipRepository,
   InMemoryUserRepository,
   SequentialIdGenerator,
@@ -30,6 +34,7 @@ export function inMemoryContainer(): Container {
   const users = new InMemoryUserRepository();
   const friendships = new InMemoryFriendshipRepository();
   const blocks = new InMemoryBlockRepository();
+  const claims = new InMemoryExpertiseClaimRepository();
 
   return {
     registerUser: new RegisterUser(users, new SequentialIdGenerator('usr')),
@@ -37,6 +42,9 @@ export function inMemoryContainer(): Container {
     respondToFriendship: new RespondToFriendship(friendships, clock),
     blockUser: new BlockUser(blocks, new SequentialIdGenerator('blk'), clock),
     unblockUser: new UnblockUser(blocks),
+    claimExpertise: new ClaimExpertise(claims, new SequentialIdGenerator('xpc'), clock),
+    verifyExpertise: new VerifyExpertise(claims, clock),
+    revokeExpertiseVerification: new RevokeExpertiseVerification(claims),
     shutdown: () => Promise.resolve(),
   };
 }
