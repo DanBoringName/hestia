@@ -64,3 +64,29 @@ model Block {
   @@unique([blockerId, blockedId])
   @@map("blocks")
 }
+
+model ExpertiseClaim {
+  id     String @id
+  userId String
+  tag    String
+
+  // Verification is a discriminated union flattened to a method string plus
+  // nullable, method-specific detail columns. Method is one of
+  // 'unverified' | 'email-domain' | 'manual-review' (a plain string to avoid
+  // enum-name friction with the hyphenated values; the domain owns the set).
+  verificationMethod String
+  institution        String?
+  emailDomain        String?
+  reviewerId         String?
+  evidenceRef        String?
+
+  claimedAt  DateTime
+  verifiedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // One claim per user per topic.
+  @@unique([userId, tag])
+  @@map("expertise_claims")
+}
