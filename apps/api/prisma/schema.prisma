@@ -24,3 +24,27 @@ model User {
 
   @@map("users")
 }
+
+enum FriendshipStatus {
+  pending
+  accepted
+  declined
+  ended
+}
+
+model Friendship {
+  id          String           @id
+  requesterId String
+  addresseeId String
+  status      FriendshipStatus
+  requestedAt DateTime
+  respondedAt DateTime?
+  endedAt     DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([requesterId])
+  @@index([addresseeId])
+  @@map("friendships")
+}
